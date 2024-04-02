@@ -8,6 +8,8 @@ import torchaudio
 import gradio as gr
 import os
 
+from pydub import AudioSegment
+
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
 os.environ["CUDA_VISIBLE_DEVICES"]="0" 
 os.environ["USER"] = "root"
@@ -49,14 +51,20 @@ def tts(original_audio, original_transcript, target_transcript, top_k=0, top_p=0
     }
 
     print(original_audio)
+    converted_audio = "/tmp/input.wav"
+
+    sound = AudioSegment.from_mp3(original_audio)
+    sound.export(converted_audio, format="wav")
+
+
     target_transcript = original_transcript + target_transcript
-    info = torchaudio.info(original_audio)
+    info = torchaudio.info(converted_audio)
     cut_off_sec = info.num_frames / info.sample_rate
     audio_dur = info.num_frames / info.sample_rate
     assert cut_off_sec <= audio_dur, f"cut_off_sec {cut_off_sec} is larger than the audio duration {audio_dur}"
     prompt_end_frame = int(cut_off_sec * info.sample_rate) - int(inverse_offset)
     print(f"prompt_end_frame:",prompt_end_frame)
-    _, gen_audio = inference_one_sample(model, ckpt["config"], ckpt['phn2num'], text_tokenizer, audio_tokenizer, original_audio, target_transcript, device, decode_config, prompt_end_frame)
+    _, gen_audio = inference_one_sample(model, ckpt["config"], ckpt['phn2num'], text_tokenizer, audio_tokenizer, converted_audio, target_transcript, device, decode_config, prompt_end_frame)
     gen_audio = gen_audio[0].cpu()
     torchaudio.save(f"gen.wav", gen_audio, 16000)
     return "gen.wav"

@@ -9,23 +9,21 @@ import gradio as gr
 import os
 
 from pydub import AudioSegment
+from models import voicecraft
+
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
 os.environ["CUDA_VISIBLE_DEVICES"]="0" 
 os.environ["USER"] = "root"
 
-ckpt_fn =f"./giga330M.pth"
 encodec_fn = "./encodec_4cb2048_giga.th"
-
-ckpt = torch.load(ckpt_fn, map_location="cpu")
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-from models import voicecraft
-model = voicecraft.VoiceCraft(ckpt["config"])
-model.load_state_dict(ckpt["model"])
-model.to(device)
-model.eval()
+current_model = None
+model = None
+ckpt = None
 
+#load tokenizers
 from data.tokenizer import (
     AudioTokenizer,
     TextTokenizer,
@@ -37,7 +35,23 @@ audio_tokenizer = AudioTokenizer(signature=encodec_fn) # will also put the neura
 
 from inference_tts_scale import inference_one_sample
 
-def tts(original_audio, original_transcript, target_transcript, top_k=0, top_p=0.8, temperature=1, stop_repetition=3,inverse_offset=0):
+def tts(original_audio, original_transcript, target_transcript, top_k=0, top_p=0.8, temperature=1, stop_repetition=3,inverse_offset=0, model_weight="830M"):
+    global current_model
+    global model
+    global ckpt
+
+    if current_model == None or current_model != f"./giga"+model_weight+".pth":
+        ckpt_fn =f"./giga"+model_weight+".pth"
+        ckpt = torch.load(ckpt_fn, map_location="cpu")
+
+        model = voicecraft.VoiceCraft(ckpt["config"])
+        model.load_state_dict(ckpt["model"])
+        model.to(device)
+        model.eval()
+        current_model=ckpt_fn
+        print ("Loaded and using: "+current_model)
+
+
     decode_config = {
         'top_k': top_k,
         'top_p': top_p,
@@ -72,6 +86,6 @@ def tts(original_audio, original_transcript, target_transcript, top_k=0, top_p=0
 input_audio = gr.inputs.Audio(label="Original Audio", type="filepath")
 output_audio = gr.outputs.Audio(label="Generated Audio", type="filepath")
 
-iface = gr.Interface(fn=tts, inputs=[input_audio, "text", "text", "number", "number", "number", "number", "number"], outputs=output_audio)
+iface = gr.Interface(fn=tts, inputs=[input_audio, "text", "text", "number", "number", "number", "number", "number", "text"], outputs=output_audio)
 
 iface.launch(share=True)

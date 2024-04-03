@@ -9,6 +9,7 @@ RUN unzip english_mfa.zip
 RUN unzip english_us_arpa.zip
 RUN wget https://huggingface.co/pyp1/VoiceCraft/resolve/main/encodec_4cb2048_giga.th?download=true -O encodec_4cb2048_giga.th
 RUN wget https://huggingface.co/pyp1/VoiceCraft/resolve/main/giga330M.pth?download=true -O giga330M.pth
+RUN wget https://huggingface.co/pyp1/VoiceCraft/resolve/main/giga830M.pth?download=true -O giga830M.pth
 ADD requirements-frozen.txt /VoiceCraft
 RUN pip install -r /VoiceCraft/requirements-frozen.txt
 RUN pip install -e git+https://github.com/facebookresearch/audiocraft.git@c5157b5bf14bf83449c17ea1eeb66c19fb4bc7f0#egg=audiocraft

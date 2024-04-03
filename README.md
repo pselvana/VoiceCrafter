@@ -1,26 +1,24 @@
-A dockerized version of VoiceCraft offering a gradio interface [voicecraft github](https://github.com/jasonppy/VoiceCraft/)
-
+# Description
+A dockerized version of VoiceCraft offering a gradio interface [voicecraft github](https://github.com/jasonppy/VoiceCraft/) and inspired by this [webio](https://github.com/Pathos14489/VoiceCraft/blob/master/webio.py) implementation.
+```sh
 # docker build -t voicecrafter
-# docker run --gpus=all -p 7860:7860 -it testvoice
+# docker run --gpus=all -p 7860:7860 -it voicecrafter
+```
 
+# Instructions
+- Run the above to start your instance
+- Visit the gradio.live link (note: not currently authenticated so anyone with the link can use it)
+- Click the "Original Audio" tile to upload clear audio of only the subject speaking on the order of 5-10 seconds. Trim out anything longer and choose audio with no background noise or crackles and pops (file formats: mp3, m4a, wav)
+- Update the "original_transcript" with the transcript of the audio uploaded
+- Update "target_transcript" with the sentence or two of text you want to generate
+- Set "top_k" to 0, "top_p" to 0.8, "temperature" to 1, "stop_repetition" to 3, "inverse_offset" to 0
+- Set "model_weight" to "330M" or "830M".  This sets the underlying model to use from VoiceCraft.  "830M" is the larger model that requires more video memory and will be slower to execute
+- Click "Submit" to generate audio
+- Click the play button next to "Generated Audio" to hear the clip and the "..." to download
 
+# Original VoiceCraft License
+The codebase is under CC BY-NC-SA 4.0 (LICENSE-CODE), and the model weights are under Coqui Public Model License 1.0.0 (LICENSE-MODEL). Note that we use some of the code from other repository that are under different licenses: ./models/codebooks_patterns.py is under MIT license; ./models/modules, ./steps/optim.py, data/tokenizer.py are under Apache License, Version 2.0; the phonemizer we used is under GNU 3.0 License.
 
-
-conda create -n voicecraft python=3.9.16
-conda activate voicecraft
-
-pip install torch==2.0.1 # this assumes your system is compatible with CUDA 11.7, otherwise checkout https://pytorch.org/get-started/previous-versions/#v201
-apt-get install ffmpeg # if you don't already have ffmpeg installed
-pip install -e git+https://github.com/facebookresearch/audiocraft.git@c5157b5bf14bf83449c17ea1eeb66c19fb4bc7f0#egg=audiocraft
-apt-get install espeak-ng # backend for the phonemizer installed below
-pip install tensorboard==2.16.2
-pip install phonemizer==3.2.1
-pip install torchaudio==2.0.2
-pip install datasets==2.16.0
-pip install torchmetrics==0.11.1
-# install MFA for getting forced-alignment, this could take a few minutes
-conda install -c conda-forge montreal-forced-aligner=2.2.17 openfst=1.8.2 kaldi=5.5.1068
-# conda install pocl # above gives an warning for installing pocl, not sure if really need this
-
-# to run ipynb
-conda install -n voicecraft ipykernel --update-deps --force-reinstall
+Please refer to the below for latest:
+- [LICENSE-CODE](https://github.com/jasonppy/VoiceCraft/blob/master/LICENSE-CODE)
+- [LICENSE-MODEL](https://github.com/jasonppy/VoiceCraft/blob/master/LICENSE-MODEL)

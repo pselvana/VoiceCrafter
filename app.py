@@ -83,9 +83,18 @@ def tts(original_audio, original_transcript, target_transcript, top_k=0, top_p=0
     torchaudio.save(f"gen.wav", gen_audio, 16000)
     return "gen.wav"
 
-input_audio = gr.inputs.Audio(label="Original Audio", type="filepath")
-output_audio = gr.outputs.Audio(label="Generated Audio", type="filepath")
+input_audio = gr.Audio(label="Original Audio", type="filepath")
+output_audio = gr.Audio(label="Generated Audio", type="filepath")
 
-iface = gr.Interface(fn=tts, inputs=[input_audio, "text", "text", "number", "number", "number", "number", "number", "text"], outputs=output_audio)
+original_transcript_input = gr.Textbox(label="Uploaded Audio Transcript")
+new_transcript_input = gr.Textbox(label="What would you like to say?")
+top_k_input = gr.Number(label="Top K", value=0)
+top_p_input = gr.Number(label="Top P", value=0.8)
+temperature_input = gr.Number(label="Temperature", value=1)
+stop_word_count_input = gr.Number(label="Stop Word Count", value=3)
+inverse_offset_input = gr.Number(label="Inverse Offset", value=0)
+model_input = gr.Radio(label="Select Option", choices=["330M", "830M"])
+
+iface = gr.Interface(fn=tts, inputs=[input_audio, original_transcript_input, new_transcript_input, top_k_input, top_p_input, temperature_input, stop_word_count_input, inverse_offset_input, model_input], outputs=output_audio)
 
 iface.launch(share=True)

@@ -13,11 +13,9 @@ RUN wget https://huggingface.co/pyp1/VoiceCraft/resolve/main/giga830M.pth?downlo
 ADD requirements-frozen.txt /VoiceCraft
 RUN pip install -r /VoiceCraft/requirements-frozen.txt
 RUN pip install -e git+https://github.com/facebookresearch/audiocraft.git@c5157b5bf14bf83449c17ea1eeb66c19fb4bc7f0#egg=audiocraft
+RUN pip install faster-whisper==0.10.1
+ADD download_models.py /VoiceCraft
+RUN python3 /VoiceCraft/download_models.py
 ADD app.py /VoiceCraft
-#RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
-#    /bin/bash ~/miniconda.sh -b -p /opt/conda
-#RUN /opt/conda/bin/conda init --system
-#RUN . /etc/profile.d/conda.sh && conda create -n voicecraft
-#RUN . /etc/profile.d/conda.sh && conda activate voicecraft
-#RUN /opt/conda/bin/conda install -c conda-forge montreal-forced-aligner=2.2.17 openfst=1.8.2 kaldi=5.5.1068
+
 ENTRYPOINT [ "python3","app.py" ]

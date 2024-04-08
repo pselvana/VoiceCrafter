@@ -99,7 +99,7 @@ def tts(original_audio, original_transcript,  target_transcript, autotranscribe=
 
 
 with gr.Blocks() as demo:
-    gr.Markdown("Voice Crafter voice clone UI")
+    gr.Markdown("# Dockerized Voicecraft: Zero-Shot Speech Editing and Text-to-Speech in the Wild")
     with gr.Row():
         input_audio = gr.Audio(label="Original Audio", type="filepath")
         autotranscribe_input = gr.Checkbox(value=True,label="Autotranscribe input")

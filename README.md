@@ -18,9 +18,7 @@ A dockerized version of VoiceCraft [CUDA only] offering a gradio interface [voic
 - Click the "Original Audio" tile to upload clear audio of only the subject speaking on the order of 5-10 seconds. Trim out anything longer and choose audio with no background noise or crackles and pops (file formats: mp3, m4a, wav)
 - Update the "original_transcript" with the transcript of the audio uploaded or leave the Autotranscribe input checkbox checked
 - Update "target_transcript" with the sentence or two of text you want to generate
-- Set "top_k" to 0, "top_p" to 0.8, "temperature" to 1, "stop_repetition" to 3, "inverse_offset" to 0
-- Set "model_weight" to "330M" or "830M".  This sets the underlying model to use from VoiceCraft.  "830M" is the larger model that requires more video memory and will be slower to execute
-- Click "Submit" to generate audio
+- Click "Run" to generate audio
 - Click the play button next to "Generated Audio" to hear the clip and the "..." to download
 
 # Models
